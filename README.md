@@ -151,46 +151,46 @@ features:
 
 | Feature | Installs | Options (default) |
 |---|---|---|
+| `atlassian-cli` | Atlassian CLI (acli) in `/usr/local/bin`. A rebuild picks up the latest release | |
+| `aws` | AWS CLI v2; a rebuild picks up the latest release unless pinned | `version` (latest) |
+| `base16-shell` | base16 colour scripts in `~/.config/base16-shell`. Source `profile_helper.fish` (or `.sh`) from your shell config | |
+| `bat` | bat, available as `bat` | |
+| `boxes` | boxes | |
+| `btop` | btop | |
 | `build-tools` | build-essential and make | |
 | `clang` | clang, clangd and lld | |
+| `claude-code` | Claude Code in `/usr/local/bin`, SHA-256 verified. A rebuild picks up the latest release on the channel | `channel` (stable), `version` (pin) |
 | `cmake` | CMake | |
-| `net-tools` | iproute2, iputils-ping, dnsutils (`ip`, `ping`, `dig`) | |
-| `ripgrep` | ripgrep (`rg`) | |
-| `bat` | bat, available as `bat` | |
+| `delta` | delta git pager, SHA-256 verified against the asset digest GitHub records | `version` (0.20.1) |
+| `direnv` | direnv | |
+| `docker-in-docker` | Docker Engine, buildx and compose. dockerd starts with the container; the user is in the `docker` group | |
 | `eza` | eza | |
 | `fd` | fd, available as `fd` | |
-| `direnv` | direnv | |
-| `delta` | delta git pager, SHA-256 verified against the asset digest GitHub records | `version` (0.20.1) |
-| `jq` | jq | |
-| `boxes` | boxes | |
+| `fish` | fish shell | |
 | `fzf` | fzf from GitHub releases | `version` (0.74.5) |
-| `starship` | Starship prompt | `version` (1.27.0) |
-| `lazygit` | lazygit | `version` (0.66.2) |
-| `lazydocker` | lazydocker | `version` (0.25.2) |
+| `gcloud` | Google Cloud CLI (gcloud, gsutil, bq) | |
+| `gh` | GitHub CLI, checksum-verified | `version` (2.104.0) |
 | `glow` | glow | `version` (3.0.0) |
+| `go` | Go in `/usr/local/go`, `GOPATH=~/go` | `version` (1.27.3) |
+| `jq` | jq | |
+| `k9s` | k9s Kubernetes TUI, checksum-verified | `version` (0.51.0) |
+| `kubectl` | kubectl, checksum-verified | `version` (1.37.2) |
+| `lazydocker` | lazydocker | `version` (0.25.2) |
+| `lazygit` | lazygit | `version` (0.66.2) |
+| `net-tools` | iproute2, iputils-ping, dnsutils (`ip`, `ping`, `dig`) | |
+| `node` | Node.js from NodeSource's apt repo, with npm and corepack | `major` (24) |
+| `opencode` | OpenCode (v2) in `/usr/local/bin`, SHA-256 verified. A rebuild picks up the latest release unless pinned. Persist `.local/share/opencode` and `.config/opencode` for state and auth | `version` (pin) |
+| `python` | python3 with pip, venv and pipx | |
+| `ripgrep` | ripgrep (`rg`) | |
+| `rust` | Rust via rustup in `~/.cargo` and `~/.rustup` (persist both) | `toolchain` (stable), `profile` (minimal) |
+| `starship` | Starship prompt | `version` (1.27.0) |
+| `terraform` | HashiCorp Terraform, checksum-verified | `version` (1.17.1) |
+| `tmux` | tmux + TPM. The `set -g @plugin` entries in your `~/.tmux.conf` are installed at build time | |
+| `uv` | uv Python package manager, checksum-verified | `version` (0.13.8) |
+| `vim` | vim + plugins cloned into `~/.vim/pack/bundle/start`. With `go` and the `vim-go` plugin, vim-go's tools are pre-built into `/opt/go-tools/bin` | `plugins` (none) |
+| `vscode` | VS Code CLI (`code`) for Remote Tunnel access | `version` (1.146.0) |
 | `workmux` | workmux | `version` (0.1.279) |
 | `zoxide` | zoxide | |
-| `btop` | btop | |
-| `gh` | GitHub CLI, checksum-verified | `version` (2.104.0) |
-| `vscode` | VS Code CLI (`code`) for Remote Tunnel access | `version` (1.146.0) |
-| `terraform` | HashiCorp Terraform, checksum-verified | `version` (1.17.1) |
-| `aws` | AWS CLI v2; a rebuild picks up the latest release unless pinned | `version` (latest) |
-| `kubectl` | kubectl, checksum-verified | `version` (1.37.2) |
-| `k9s` | k9s Kubernetes TUI, checksum-verified | `version` (0.51.0) |
-| `go` | Go in `/usr/local/go`, `GOPATH=~/go` | `version` (1.27.3) |
-| `python` | python3 with pip, venv and pipx | |
-| `uv` | uv Python package manager, checksum-verified | `version` (0.13.8) |
-| `node` | Node.js from NodeSource's apt repo, with npm and corepack | `major` (24) |
-| `rust` | Rust via rustup in `~/.cargo` and `~/.rustup` (persist both) | `toolchain` (stable), `profile` (minimal) |
-| `docker-in-docker` | Docker Engine, buildx and compose. dockerd starts with the container; the user is in the `docker` group | |
-| `gcloud` | Google Cloud CLI (gcloud, gsutil, bq) | |
-| `fish` | fish shell | |
-| `base16-shell` | base16 colour scripts in `~/.config/base16-shell`. Source `profile_helper.fish` (or `.sh`) from your shell config | |
-| `vim` | vim + plugins cloned into `~/.vim/pack/bundle/start`. With `go` and the `vim-go` plugin, vim-go's tools are pre-built into `/opt/go-tools/bin` | `plugins` (none) |
-| `tmux` | tmux + TPM. The `set -g @plugin` entries in your `~/.tmux.conf` are installed at build time | |
-| `claude-code` | Claude Code in `/usr/local/bin`, SHA-256 verified. A rebuild picks up the latest release on the channel | `channel` (stable), `version` (pin) |
-| `opencode` | OpenCode (v2) in `/usr/local/bin`, SHA-256 verified. A rebuild picks up the latest release unless pinned. Persist `.local/share/opencode` and `.config/opencode` for state and auth | `version` (pin) |
-| `atlassian-cli` | Atlassian CLI (acli) in `/usr/local/bin`. A rebuild picks up the latest release | |
 
 **vim plugins** are `owner/repo` on GitHub or a full git URL. An optional `@ref` pins a branch
 or tag. They are cloned at build time.
