@@ -1,0 +1,2 @@
+description: Clang compiler, clangd and lld (apt)
+apt: [clang, clangd, lld]

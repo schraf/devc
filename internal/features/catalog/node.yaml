@@ -1,0 +1,12 @@
+description: Node.js from NodeSource's apt repo, with npm and corepack
+options:
+  major:
+    default: "24"
+    help: Node.js major version to install
+    pattern: '^[0-9]+$'
+system: |
+  # Node.js from NodeSource's apt repo
+  RUN curl -fsSL https://deb.nodesource.com/setup_{{.Opt.major}}.x | bash - \
+      && apt-get update && apt-get install -y --no-install-recommends nodejs \
+      && rm -rf /var/lib/apt/lists/* \
+      && node --version && npm --version

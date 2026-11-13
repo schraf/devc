@@ -1,0 +1,16 @@
+description: kubectl (checksum-verified)
+options:
+  version:
+    default: 1.37.2
+    help: Kubernetes version to install
+    pattern: '^[0-9][0-9A-Za-z.+_-]*$'
+system: |
+  # kubectl, checksum-verified against the official kubectl.sha256
+  RUN set -eux; \
+      base=https://dl.k8s.io/release/v{{.Opt.version}}; \
+      arch={{arch "arm64" "amd64"}}; \
+      curl -fsSLo /tmp/kubectl "$base/bin/linux/$arch/kubectl"; \
+      echo "$(curl -fsSL "$base/bin/linux/$arch/kubectl.sha256")  /tmp/kubectl" | sha256sum -c -; \
+      install -m 755 /tmp/kubectl /usr/local/bin/kubectl; \
+      rm -f /tmp/kubectl; \
+      kubectl version --client

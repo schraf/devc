@@ -1,0 +1,27 @@
+description: OpenCode coding agent (v2, updates on rebuild)
+apt: [jq]
+options:
+  version:
+    default: ''
+    help: 'Pin an exact version (default: latest v2 release)'
+    pattern: '^[0-9A-Za-z.+_-]*$'
+late: |
+  # OpenCode v2. The version comes from the @opencode/cli npm package, because GitHub's
+  # "latest" release for this repo is still the v1 line. ADD of the npm metadata busts the
+  # cache whenever a new v2 release is published, so a plain rebuild upgrades. Verified
+  # against the release's SHA256SUMS asset. The binary is root-owned, so updates come from
+  # rebuilding the image.
+  ADD https://registry.npmjs.org/@opencode%2Fcli/latest /tmp/opencode-latest.json
+  RUN set -eu; \
+      version="{{if .Opt.version}}{{.Opt.version}}{{else}}$(jq -r .version /tmp/opencode-latest.json){{end}}"; \
+      base=https://github.com/anomalyco/opencode/releases/download/v$version; \
+      file=opencode-linux-{{arch "arm64" "x64"}}.tar.gz; \
+      cd /tmp; \
+      curl -fsSLO "$base/$file"; \
+      curl -fsSL "$base/SHA256SUMS" | grep " $file\$" | sha256sum -c -; \
+      tar -xzf "$file" -C /usr/local/bin opencode; \
+      chmod 755 /usr/local/bin/opencode; \
+      rm -f "$file" /tmp/opencode-latest.json; \
+      # The image's HOME is the user's home, and this runs as root; keep the version check's
+      # state out of it or the persisted ~/.local/share gets seeded with root-owned files.
+      HOME=/tmp opencode --version

@@ -1,0 +1,20 @@
+description: delta git pager (checksum-verified)
+apt: [jq]
+options:
+  version:
+    default: 0.20.1
+    help: Release version to install
+    pattern: '^[0-9A-Za-z][0-9A-Za-z.+_-]*$'
+system: |
+  # delta, checksum-verified against the SHA-256 digest GitHub records for the asset (the
+  # release ships no checksum file)
+  RUN set -eux; \
+      file=delta-{{.Opt.version}}-{{arch "aarch64" "x86_64"}}-unknown-linux-gnu.tar.gz; \
+      digest=$(curl -fsSL "https://api.github.com/repos/dandavison/delta/releases/tags/{{.Opt.version}}" \
+                  | jq -r ".assets[] | select(.name == \"$file\").digest" | cut -d: -f2); \
+      cd /tmp; \
+      curl -fsSLO "https://github.com/dandavison/delta/releases/download/{{.Opt.version}}/$file"; \
+      echo "$digest  $file" | sha256sum -c -; \
+      tar -xzf "$file" -C /usr/local/bin --strip-components=1 "delta-{{.Opt.version}}-{{arch "aarch64" "x86_64"}}-unknown-linux-gnu/delta"; \
+      rm -f "$file"; \
+      delta --version

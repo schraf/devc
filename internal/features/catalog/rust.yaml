@@ -1,0 +1,18 @@
+description: Rust toolchain via rustup, CARGO_HOME in ~/.cargo
+options:
+  toolchain:
+    default: stable
+    help: Default toolchain (e.g. stable or a version like 1.90.0)
+    pattern: '^[0-9A-Za-z][0-9A-Za-z.+_-]*$'
+  profile:
+    default: minimal
+    help: rustup install profile (minimal, default or complete)
+    pattern: '^[a-z]+$'
+user: |
+  # Rust via rustup, installed into the user's home. ~/.cargo holds the toolchain binaries and
+  # the crates registry, ~/.rustup the toolchains; add both to `persist` to survive
+  # recreations. --no-modify-path because PATH is set here, not in shell configs.
+  RUN curl -fsSL https://sh.rustup.rs | sh -s -- -y --no-modify-path --profile {{.Opt.profile}} --default-toolchain {{.Opt.toolchain}}
+  ENV CARGO_HOME={{.Home}}/.cargo \
+      RUSTUP_HOME={{.Home}}/.rustup \
+      PATH={{.Home}}/.cargo/bin:${PATH}

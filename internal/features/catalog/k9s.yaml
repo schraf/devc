@@ -1,0 +1,17 @@
+description: k9s Kubernetes TUI (checksum-verified)
+options:
+  version:
+    default: 0.51.0
+    help: Release version to install
+    pattern: '^[0-9A-Za-z][0-9A-Za-z.+_-]*$'
+system: |
+  # k9s, checksum-verified against the release's checksums.sha256
+  RUN set -eux; \
+      base=https://github.com/derailed/k9s/releases/download/v{{.Opt.version}}; \
+      file=k9s_{{arch "Linux_arm64" "Linux_amd64"}}.tar.gz; \
+      cd /tmp; \
+      curl -fsSLO "$base/$file"; \
+      curl -fsSL "$base/checksums.sha256" | grep " $file\$" | sha256sum -c -; \
+      tar -xzf "$file" -C /usr/local/bin k9s; \
+      rm -f "$file"; \
+      k9s version

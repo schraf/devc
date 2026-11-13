@@ -152,11 +152,15 @@ features:
 | Feature | Installs | Options (default) |
 |---|---|---|
 | `build-tools` | build-essential and make | |
+| `clang` | clang, clangd and lld | |
+| `cmake` | CMake | |
 | `net-tools` | iproute2, iputils-ping, dnsutils (`ip`, `ping`, `dig`) | |
 | `ripgrep` | ripgrep (`rg`) | |
 | `bat` | bat, available as `bat` | |
 | `eza` | eza | |
 | `fd` | fd, available as `fd` | |
+| `direnv` | direnv | |
+| `delta` | delta git pager, SHA-256 verified against the asset digest GitHub records | `version` (0.20.1) |
 | `jq` | jq | |
 | `boxes` | boxes | |
 | `fzf` | fzf from GitHub releases | `version` (0.74.5) |
@@ -170,7 +174,14 @@ features:
 | `gh` | GitHub CLI, checksum-verified | `version` (2.104.0) |
 | `vscode` | VS Code CLI (`code`) for Remote Tunnel access | `version` (1.146.0) |
 | `terraform` | HashiCorp Terraform, checksum-verified | `version` (1.17.1) |
+| `aws` | AWS CLI v2; a rebuild picks up the latest release unless pinned | `version` (latest) |
+| `kubectl` | kubectl, checksum-verified | `version` (1.37.2) |
+| `k9s` | k9s Kubernetes TUI, checksum-verified | `version` (0.51.0) |
 | `go` | Go in `/usr/local/go`, `GOPATH=~/go` | `version` (1.27.3) |
+| `python` | python3 with pip, venv and pipx | |
+| `uv` | uv Python package manager, checksum-verified | `version` (0.13.8) |
+| `node` | Node.js from NodeSource's apt repo, with npm and corepack | `major` (24) |
+| `rust` | Rust via rustup in `~/.cargo` and `~/.rustup` (persist both) | `toolchain` (stable), `profile` (minimal) |
 | `docker-in-docker` | Docker Engine, buildx and compose. dockerd starts with the container; the user is in the `docker` group | |
 | `gcloud` | Google Cloud CLI (gcloud, gsutil, bq) | |
 | `fish` | fish shell | |
@@ -178,6 +189,7 @@ features:
 | `vim` | vim + plugins cloned into `~/.vim/pack/bundle/start`. With `go` and the `vim-go` plugin, vim-go's tools are pre-built into `/opt/go-tools/bin` | `plugins` (none) |
 | `tmux` | tmux + TPM. The `set -g @plugin` entries in your `~/.tmux.conf` are installed at build time | |
 | `claude-code` | Claude Code in `/usr/local/bin`, SHA-256 verified. A rebuild picks up the latest release on the channel | `channel` (stable), `version` (pin) |
+| `opencode` | OpenCode (v2) in `/usr/local/bin`, SHA-256 verified. A rebuild picks up the latest release unless pinned. Persist `.local/share/opencode` and `.config/opencode` for state and auth | `version` (pin) |
 | `atlassian-cli` | Atlassian CLI (acli) in `/usr/local/bin`. A rebuild picks up the latest release | |
 
 **vim plugins** are `owner/repo` on GitHub or a full git URL. An optional `@ref` pins a branch

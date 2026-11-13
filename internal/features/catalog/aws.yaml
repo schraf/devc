@@ -1,0 +1,17 @@
+description: AWS CLI v2 (a rebuild picks up the latest release unless pinned)
+options:
+  version:
+    default: ''
+    help: 'Pin an exact version (default: latest)'
+    pattern: '^[0-9A-Za-z.+_-]*$'
+system: |
+  # AWS CLI v2. Without a pin the URL serves the latest release, so a rebuild upgrades; pinned
+  # versions come from the versioned URL. --update replaces an existing install in place.
+  RUN set -eu; \
+      arch={{arch "aarch64" "x86_64"}}; \
+      {{if .Opt.version}}file=awscli-exe-linux-$arch-{{.Opt.version}}.zip{{else}}file=awscli-exe-linux-$arch.zip{{end}}; \
+      curl -fsSL -o /tmp/awscli.zip "https://awscli.amazonaws.com/$file"; \
+      unzip -q -o /tmp/awscli.zip -d /tmp/awscli; \
+      /tmp/awscli/aws/install --update --install-dir /usr/local/aws-cli --bin-dir /usr/local/bin; \
+      rm -rf /tmp/awscli /tmp/awscli.zip; \
+      aws --version
