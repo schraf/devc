@@ -17,8 +17,8 @@ import (
 
 	"golang.org/x/term"
 
-	"github.com/schraf/devcontainer/internal/config"
-	"github.com/schraf/devcontainer/internal/render"
+	"github.com/schraf/devc/internal/config"
+	"github.com/schraf/devc/internal/render"
 )
 
 const (

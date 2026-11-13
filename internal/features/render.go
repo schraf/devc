@@ -7,7 +7,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/schraf/devcontainer/internal/config"
+	"github.com/schraf/devc/internal/config"
 )
 
 // Data is what feature templates see.

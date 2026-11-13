@@ -1,4 +1,4 @@
-module github.com/schraf/devcontainer
+module github.com/schraf/devc
 
 go 1.27.3
 

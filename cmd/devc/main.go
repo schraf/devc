@@ -10,9 +10,9 @@ import (
 	"os/signal"
 	"path/filepath"
 
-	"github.com/schraf/devcontainer/internal/config"
-	"github.com/schraf/devcontainer/internal/docker"
-	"github.com/schraf/devcontainer/internal/features"
+	"github.com/schraf/devc/internal/config"
+	"github.com/schraf/devc/internal/docker"
+	"github.com/schraf/devc/internal/features"
 )
 
 const usage = `devc - build and run a dev container defined in one YAML file

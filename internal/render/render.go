@@ -12,8 +12,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/schraf/devcontainer/internal/config"
-	"github.com/schraf/devcontainer/internal/features"
+	"github.com/schraf/devc/internal/config"
+	"github.com/schraf/devc/internal/features"
 )
 
 // corePackages are needed by the generated Dockerfile and most feature snippets.

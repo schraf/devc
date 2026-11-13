@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/schraf/devcontainer/internal/config"
+	"github.com/schraf/devc/internal/config"
 )
 
 func TestEveryFeatureRendersOnBothPlatforms(t *testing.T) {

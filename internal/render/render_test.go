@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/schraf/devcontainer/internal/config"
+	"github.com/schraf/devc/internal/config"
 )
 
 var update = flag.Bool("update", false, "rewrite golden files")
