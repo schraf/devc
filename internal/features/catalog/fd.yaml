@@ -1,0 +1,5 @@
+description: fd, a simple find (apt), as `fd`
+apt: [fd-find]
+system: |
+  # Debian/Ubuntu ship fd as fdfind
+  RUN ln -sf /usr/bin/fdfind /usr/local/bin/fd

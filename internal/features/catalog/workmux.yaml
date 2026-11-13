@@ -1,0 +1,10 @@
+description: git worktrees + tmux windows
+options:
+  version:
+    default: 0.1.279
+    help: Release version to install
+    pattern: '^[0-9A-Za-z][0-9A-Za-z.+_-]*$'
+system: |
+  RUN curl -fsSL https://github.com/raine/workmux/releases/download/v{{.Opt.version}}/workmux-linux-{{arch "arm64" "amd64"}}.tar.gz \
+          | tar -xz -C /usr/local/bin workmux \
+      && chmod 755 /usr/local/bin/workmux

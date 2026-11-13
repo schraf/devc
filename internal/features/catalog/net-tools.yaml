@@ -1,0 +1,2 @@
+description: ip, ping, dig and friends (apt)
+apt: [iproute2, iputils-ping, dnsutils]

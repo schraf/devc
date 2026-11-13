@@ -1,0 +1,80 @@
+name: dev
+image: devcontainer:latest
+base: ubuntu:24.04
+platform: linux/arm64          # defaults to the architecture of the machine running devc
+user:
+  name: dev
+  uid: 1000
+  gid: 1000
+  shell: /usr/bin/fish
+  sudo: true
+# timezone: America/New_York
+# certs: [corp-root-ca.crt]    # extra root CAs, e.g. for a TLS-inspecting proxy
+features:
+  build-tools: {}
+  ripgrep: {}
+  fd: {}
+  jq: {}
+  fzf: {}
+  starship: {}
+  lazygit: {}
+  lazydocker: {}
+  glow: {}
+  workmux: {}
+  zoxide: {}
+  btop: {}
+  glab: {}
+  terraform: {}
+  go: {version: 1.27.3}        # every versioned feature can be pinned like this
+  docker-in-docker: {}
+  gcloud: {}
+  fish: {}
+  base16-shell: {}
+  vim:
+    plugins:
+      - tpope/vim-sensible
+      - fatih/vim-go
+  tmux: {}
+  claude-code: {}
+files:
+  .config/git/config: ""   # so `git config --global` writes into the persisted .config/git
+  .config/fish/config.fish: |
+    set -gx EDITOR vim
+
+    if status --is-interactive
+        zoxide init fish | source
+        starship init fish | source
+        fzf --fish | source
+    end
+  .vimrc: |
+    set number
+    set expandtab shiftwidth=4 softtabstop=4
+    set ignorecase smartcase
+    call mkdir(expand('~/.vim/undo'), 'p')
+    set undofile undodir=~/.vim/undo//
+  .tmux.conf: |
+    set -g mouse on
+    set-window-option -g mode-keys vi
+
+    set -g @plugin 'tmux-plugins/tpm'
+    set -g @plugin 'tmux-plugins/tmux-sensible'
+    run '~/.tmux/plugins/tpm/tpm'
+persist:
+  - .cache
+  - .local/share
+  - .local/state
+  - .local/bin
+  - .config/git
+  - .config/gh
+  - .config/glab-cli
+  - .config/gcloud
+  - .ssh
+  - go
+  - .claude
+run:
+  container: dev
+  hostname: dev
+  mounts:
+    - ~/Projects:/workspaces   # your code on the host
+  ssh_agent: true              # Docker Desktop / OrbStack SSH agent forwarding
+  # ports: ["3000:3000"]

@@ -1,0 +1,11 @@
+description: tmux + TPM; installs the @plugin entries from your ~/.tmux.conf at build time
+apt: [tmux]
+user: |
+  # TPM, plus the plugins listed with `set -g @plugin` in ~/.tmux.conf (from files)
+  RUN git clone --depth 1 https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
+      && if [ -f ~/.tmux.conf ]; then \
+          tmux new-session -d -s build \
+            && ~/.tmux/plugins/tpm/bin/install_plugins \
+            || echo "WARNING: tmux plugin install failed; run prefix + I inside tmux"; \
+          tmux kill-server 2>/dev/null || true; \
+      fi

@@ -1,0 +1,2 @@
+description: jq JSON processor (apt)
+apt: [jq]

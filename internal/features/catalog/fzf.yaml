@@ -1,0 +1,11 @@
+description: Fuzzy finder from GitHub releases
+options:
+  version:
+    default: 0.74.5
+    help: Release version to install
+    pattern: '^[0-9A-Za-z][0-9A-Za-z.+_-]*$'
+system: |
+  # fzf (Ubuntu's apt build is too old for `fzf --fish`)
+  RUN curl -fsSL https://github.com/junegunn/fzf/releases/download/v{{.Opt.version}}/fzf-{{.Opt.version}}-linux_{{arch "arm64" "amd64"}}.tar.gz \
+          | tar -xz -C /usr/local/bin fzf \
+      && chmod 755 /usr/local/bin/fzf

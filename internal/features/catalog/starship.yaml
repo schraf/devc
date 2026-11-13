@@ -1,0 +1,10 @@
+description: Starship prompt
+options:
+  version:
+    default: 1.27.0
+    help: Release version to install
+    pattern: '^[0-9A-Za-z][0-9A-Za-z.+_-]*$'
+system: |
+  RUN curl -fsSL https://github.com/starship/starship/releases/download/v{{.Opt.version}}/starship-{{arch "aarch64" "x86_64"}}-unknown-linux-musl.tar.gz \
+          | tar -xz -C /usr/local/bin starship \
+      && chmod 755 /usr/local/bin/starship

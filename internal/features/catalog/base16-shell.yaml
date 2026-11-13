@@ -1,0 +1,3 @@
+description: base16 colour scripts in ~/.config/base16-shell (source profile_helper from your shell config)
+user: |
+  RUN git clone --depth 1 https://github.com/tinted-theming/base16-shell ~/.config/base16-shell

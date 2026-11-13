@@ -1,0 +1,17 @@
+description: GitLab CLI (checksum-verified)
+options:
+  version:
+    default: 1.128.0
+    help: Release version to install
+    pattern: '^[0-9A-Za-z][0-9A-Za-z.+_-]*$'
+system: |
+  # GitLab CLI (glab), checksum-verified against the release's checksums.txt
+  RUN set -eux; \
+      base=https://gitlab.com/api/v4/projects/gitlab-org%2Fcli/packages/generic/glab/{{.Opt.version}}; \
+      file=glab_{{.Opt.version}}_linux_{{arch "arm64" "amd64"}}.tar.gz; \
+      cd /tmp; \
+      curl -fsSLO "$base/$file"; \
+      curl -fsSL "$base/checksums.txt" | grep " $file\$" | sha256sum -c -; \
+      tar -xzf "$file" -C /usr/local/bin --strip-components=1 bin/glab; \
+      rm -f "$file"; \
+      glab --version

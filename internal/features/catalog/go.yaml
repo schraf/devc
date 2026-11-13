@@ -1,0 +1,12 @@
+description: Go toolchain in /usr/local/go, GOPATH=~/go
+dirs: [go]
+options:
+  version:
+    default: 1.27.3
+    help: Release version to install
+    pattern: '^[0-9A-Za-z][0-9A-Za-z.+_-]*$'
+system: |
+  # Go toolchain. GOPATH (~/go: module cache + `go install` binaries) is in the user's home.
+  RUN curl -fsSL https://go.dev/dl/go{{.Opt.version}}.linux-{{arch "arm64" "amd64"}}.tar.gz | tar -xz -C /usr/local
+  ENV GOPATH={{.Home}}/go \
+      PATH=/usr/local/go/bin:{{.Home}}/go/bin:/opt/go-tools/bin:${PATH}

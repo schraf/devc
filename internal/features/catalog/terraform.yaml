@@ -1,0 +1,17 @@
+description: HashiCorp Terraform (checksum-verified)
+options:
+  version:
+    default: 1.17.1
+    help: Release version to install
+    pattern: '^[0-9A-Za-z][0-9A-Za-z.+_-]*$'
+system: |
+  # Terraform, checksum-verified against the release's SHA256SUMS
+  RUN set -eux; \
+      base=https://releases.hashicorp.com/terraform/{{.Opt.version}}; \
+      file=terraform_{{.Opt.version}}_linux_{{arch "arm64" "amd64"}}.zip; \
+      cd /tmp; \
+      curl -fsSLO "$base/$file"; \
+      curl -fsSL "$base/terraform_{{.Opt.version}}_SHA256SUMS" | grep " $file\$" | sha256sum -c -; \
+      unzip -o -d /usr/local/bin "$file" terraform; \
+      rm -f "$file"; \
+      terraform version

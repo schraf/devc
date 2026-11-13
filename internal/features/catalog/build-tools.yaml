@@ -1,0 +1,2 @@
+description: build-essential and make (apt)
+apt: [build-essential, make]

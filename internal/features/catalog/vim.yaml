@@ -1,0 +1,23 @@
+description: vim + plugins cloned into ~/.vim/pack/bundle/start; with go and vim-go, vim-go's tools in /opt/go-tools/bin
+apt: [vim]
+options:
+  plugins:
+    type: list
+    help: owner/repo[@ref] on GitHub, or a full git URL[@ref]
+user: |
+  RUN set -eux; \
+      mkdir -p ~/.vim/pack/bundle/start; \
+      cd ~/.vim/pack/bundle/start{{range .Opt.plugins}}{{with repo .}}; \
+      git clone --depth 1 {{if .Ref}}--branch {{.Ref}} {{end}}{{.URL}} {{.Name}}{{end}}{{end}}
+  {{- if and (enabled "go") (hasRepo .Opt.plugins "vim-go")}}
+  # vim-go's helper binaries (gopls, dlv, ...), built into /opt/go-tools/bin with a
+  # throwaway module cache so nothing lands in ~/go. Runs without your vimrc.
+  USER root
+  RUN install -d -o {{.User.UID}} -g {{.User.GID}} /opt/go-tools/bin
+  USER {{.User.Name}}
+  RUN GOBIN=/opt/go-tools/bin GOMODCACHE=/tmp/gomod GOCACHE=/tmp/gocache \
+          vim -N -u NONE -i NONE -E -s -c 'packloadall' -c 'GoInstallBinaries' -c 'qa!' </dev/null || true; \
+      GOMODCACHE=/tmp/gomod go clean -modcache; \
+      rm -rf /tmp/gocache; \
+      ls /opt/go-tools/bin
+  {{- end}}

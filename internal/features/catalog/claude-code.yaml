@@ -1,0 +1,29 @@
+description: Claude Code CLI (SHA-256 verified, updates on rebuild)
+apt: [jq]
+dirs: [.claude]
+options:
+  channel:
+    default: stable
+    help: 'Release channel: stable or latest'
+    pattern: '^[0-9A-Za-z-]+$'
+  version:
+    default: ''
+    help: Pin an exact version (overrides channel)
+    pattern: '^[0-9A-Za-z.+_-]*$'
+late: |
+  # Claude Code: same download + SHA-256 check as https://claude.ai/install.sh, but the binary
+  # goes to /usr/local/bin. ADD of the channel file busts the cache whenever a new release lands
+  # on that channel, so a plain rebuild upgrades.
+  ADD https://downloads.claude.ai/claude-code-releases/{{.Opt.channel}} /tmp/claude-channel-version
+  RUN set -eu; \
+      base=https://downloads.claude.ai/claude-code-releases; \
+      version="{{if .Opt.version}}{{.Opt.version}}{{else}}$(cat /tmp/claude-channel-version){{end}}"; \
+      checksum=$(curl -fsSL "$base/$version/manifest.json" | jq -r '.platforms["linux-{{arch "arm64" "x64"}}"].checksum'); \
+      curl -fsSL -o /usr/local/bin/claude "$base/$version/linux-{{arch "arm64" "x64"}}/claude"; \
+      echo "$checksum  /usr/local/bin/claude" | sha256sum -c -; \
+      chmod 755 /usr/local/bin/claude; \
+      rm -f /tmp/claude-channel-version; \
+      claude --version
+  # Updates come from rebuilding the image (the binary is root-owned, so auto-update can't work).
+  ENV DISABLE_AUTOUPDATER=1 \
+      CLAUDE_CONFIG_DIR={{.Home}}/.claude

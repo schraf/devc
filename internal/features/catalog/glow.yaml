@@ -1,0 +1,11 @@
+description: Markdown renderer for the terminal
+options:
+  version:
+    default: 3.0.0
+    help: Release version to install
+    pattern: '^[0-9A-Za-z][0-9A-Za-z.+_-]*$'
+system: |
+  {{- $dir := printf "glow_%s_Linux_%s" .Opt.version (arch "arm64" "x86_64") -}}
+  RUN curl -fsSL https://github.com/charmbracelet/glow/releases/download/v{{.Opt.version}}/{{$dir}}.tar.gz \
+          | tar -xz -C /usr/local/bin --strip-components=1 {{$dir}}/glow \
+      && chmod 755 /usr/local/bin/glow

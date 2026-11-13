@@ -1,0 +1,5 @@
+description: cat with syntax highlighting (apt), as `bat`
+apt: [bat]
+system: |
+  # Debian/Ubuntu ship bat as batcat
+  RUN ln -sf /usr/bin/batcat /usr/local/bin/bat
