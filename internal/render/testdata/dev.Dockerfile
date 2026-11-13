@@ -60,6 +60,19 @@ RUN curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg \
     && gcloud --version
 ENV CLOUDSDK_CORE_CUSTOM_CA_CERTS_FILE=/etc/ssl/certs/ca-certificates.crt
 
+# --- gh ---
+# GitHub CLI (gh), checksum-verified against the release's checksums.txt
+RUN set -eux; \
+    base=https://github.com/cli/cli/releases/download/v2.104.0; \
+    tarball=gh_2.104.0_linux_arm64.tar.gz; \
+    cd /tmp; \
+    curl -fsSLO "$base/$tarball"; \
+    curl -fsSL "$base/gh_2.104.0_checksums.txt" | grep " $tarball\$" | sha256sum -c -; \
+    tar -xzf "$tarball" -C /usr/local/bin --strip-components=2 \
+        "gh_2.104.0_linux_arm64/bin/gh"; \
+    rm -f "$tarball"; \
+    gh --version
+
 # --- glab ---
 # GitLab CLI (glab), checksum-verified against the release's checksums.txt
 RUN set -eux; \

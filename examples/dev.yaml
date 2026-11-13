@@ -24,6 +24,7 @@ features:
   zoxide: {}
   btop: {}
   glab: {}
+  gh: {}
   terraform: {}
   go: {version: 1.27.3}        # every versioned feature can be pinned like this
   docker-in-docker: {}
