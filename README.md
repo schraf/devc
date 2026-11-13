@@ -176,6 +176,7 @@ features:
 | `vim` | vim + plugins cloned into `~/.vim/pack/bundle/start`. With `go` and the `vim-go` plugin, vim-go's tools are pre-built into `/opt/go-tools/bin` | `plugins` (none) |
 | `tmux` | tmux + TPM. The `set -g @plugin` entries in your `~/.tmux.conf` are installed at build time | |
 | `claude-code` | Claude Code in `/usr/local/bin`, SHA-256 verified. A rebuild picks up the latest release on the channel | `channel` (stable), `version` (pin) |
+| `atlassian-cli` | Atlassian CLI (acli) in `/usr/local/bin`. A rebuild picks up the latest release | |
 
 **vim plugins** are `owner/repo` on GitHub or a full git URL. An optional `@ref` pins a branch
 or tag. They are cloned at build time.

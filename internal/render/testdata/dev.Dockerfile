@@ -14,6 +14,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
+# --- atlassian-cli ---
+# Atlassian CLI (acli), from the official "latest" tarball. Upstream publishes no checksums
+# and no versioned URLs, so there is nothing to verify or pin: every rebuild that re-runs
+# this layer picks up the newest release.
+RUN set -eux; \
+    file=acli_linux_arm64.tar.gz; \
+    cd /tmp; \
+    curl -fsSLO "https://acli.atlassian.com/linux/latest/$file"; \
+    tar -xzf "$file"; \
+    install -o root -g root -m 0755 acli_*_linux_*/acli /usr/local/bin/acli; \
+    rm -rf "$file" acli_*_linux_*; \
+    acli --version
+
 # --- docker-in-docker ---
 # Docker Engine (daemon + CLI + buildx + compose) from Docker's official repo
 RUN install -m 0755 -d /etc/apt/keyrings \
@@ -117,6 +130,7 @@ RUN install -d -o 1000 -g 1000 \
         /home/dev/.cache \
         /home/dev/.claude \
         /home/dev/.config \
+        /home/dev/.config/acli \
         /home/dev/.config/gcloud \
         /home/dev/.config/gh \
         /home/dev/.config/git \

@@ -36,6 +36,7 @@ features:
       - fatih/vim-go
   tmux: {}
   claude-code: {}
+  atlassian-cli: {}
 files:
   .config/git/config: ""   # so `git config --global` writes into the persisted .config/git
   .config/fish/config.fish: |
@@ -68,6 +69,7 @@ persist:
   - .config/gh
   - .config/glab-cli
   - .config/gcloud
+  - .config/acli
   - .ssh
   - go
   - .claude
