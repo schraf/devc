@@ -11,6 +11,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"slices"
 	"sort"
 	"strings"
 	"syscall"
@@ -286,6 +287,40 @@ func (c *Client) Down(cfg *config.Config, volumes bool) error {
 // Shell replaces devc with an interactive `docker exec` in the running container: the user's
 // shell, or command when given.
 func (c *Client) Shell(cfg *config.Config, command []string) error {
+	if len(command) == 0 {
+		command = []string{cfg.User.Shell, "-l"}
+	}
+	return c.forward(cfg, command)
+}
+
+// VSCode runs the container's VS Code CLI (from the `vscode` feature) in this terminal:
+// `code tunnel` by default, or `code <args>` when args are given.
+func (c *Client) VSCode(cfg *config.Config, args []string) error {
+	if !cfg.Enabled("vscode") {
+		return errors.New("the vscode feature isn't enabled; add `vscode: {}` to features and rebuild")
+	}
+	if len(cfg.Persist) > 0 && !slices.Contains(cfg.Persist, ".vscode") {
+		c.printf("Note: add .vscode (and .vscode-server) to persist to keep the tunnel login across devc down/up.\n")
+	}
+	return c.forward(cfg, append([]string{"code"}, codeCommand(args)...))
+}
+
+// codeCommand maps devc vscode args onto the code CLI: no args means tunnel, and the server
+// license terms are accepted automatically for tunnels so the first run never hangs on a prompt.
+func codeCommand(args []string) []string {
+	if len(args) == 0 {
+		return []string{"tunnel", "--accept-server-license-terms"}
+	}
+	if args[0] == "tunnel" && !slices.Contains(args, "--accept-server-license-terms") {
+		args = slices.Clone(args)
+		args = append(args, "--accept-server-license-terms")
+	}
+	return args
+}
+
+// forward replaces devc with an interactive `docker exec` running command in the running
+// container.
+func (c *Client) forward(cfg *config.Config, command []string) error {
 	ct, err := c.owned(cfg)
 	if errors.Is(err, ErrNotFound) {
 		return fmt.Errorf("%s doesn't exist; run `devc up` first", cfg.Run.Container)
@@ -305,11 +340,7 @@ func (c *Client) Shell(cfg *config.Config, command []string) error {
 	if term.IsTerminal(int(os.Stdin.Fd())) {
 		args = append(args, "--tty")
 	}
-	args = append(args, cfg.Run.Container)
-	if len(command) == 0 {
-		command = []string{cfg.User.Shell, "-l"}
-	}
-	return syscall.Exec(docker, append(args, command...), os.Environ())
+	return syscall.Exec(docker, append(append(args, cfg.Run.Container), command...), os.Environ())
 }
 
 // Logs shows the container's output.

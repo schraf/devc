@@ -1,0 +1,16 @@
+description: VS Code CLI (code), for Remote Tunnel access (devc vscode)
+dirs: [.vscode, .vscode-server]
+options:
+  version:
+    default: 1.146.0
+    help: VS Code version to install
+    pattern: '^[0-9][0-9A-Za-z.+_-]*$'
+system: |
+  # VS Code CLI (code), the standalone CLI from https://code.visualstudio.com/download. It is
+  # musl-static, so the alpine build runs on Debian too. Microsoft publishes no checksums for
+  # it; the pinned version is what keeps builds reproducible.
+  RUN set -eux; \
+      curl -fsSL https://update.code.visualstudio.com/{{.Opt.version}}/cli-alpine-{{arch "arm64" "x64"}}/stable -o /tmp/code.tgz; \
+      tar -xzf /tmp/code.tgz -C /usr/local/bin code; \
+      rm -f /tmp/code.tgz; \
+      code --version

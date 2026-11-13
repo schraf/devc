@@ -26,6 +26,8 @@ commands:
   stop                   stop the container
   down [--volumes]       remove the container (and its named volumes)
   shell [-- cmd args]    open a shell (or run a command) in the running container
+  vscode [args]          run the container's VS Code CLI: 'code tunnel' by default,
+                         otherwise 'code <args>' (vscode feature required)
   status                 show image, container and volume state
   logs [-f]              show the container's output
 
@@ -56,7 +58,7 @@ func run(args []string) error {
 	name, rest := global.Arg(0), global.Args()[1:]
 
 	switch name {
-	case "build", "up", "stop", "down", "shell", "status", "logs":
+	case "build", "up", "stop", "down", "shell", "status", "logs", "vscode":
 	case "help":
 		fmt.Println(usage)
 		return nil
@@ -83,14 +85,19 @@ func run(args []string) error {
 			}
 		}
 	}
-	if err := fs.Parse(rest); err != nil {
-		if errors.Is(err, flag.ErrHelp) {
-			return nil
+	// `devc vscode` passes everything after the command through to the container's code CLI,
+	// so its flags are not parsed here.
+	if name != "vscode" {
+		if err := fs.Parse(rest); err != nil {
+			if errors.Is(err, flag.ErrHelp) {
+				return nil
+			}
+			return err
 		}
-		return err
-	}
-	if fs.NArg() > 0 && name != "shell" {
-		return fmt.Errorf("unexpected arguments %q", fs.Args())
+		if fs.NArg() > 0 && name != "shell" {
+			return fmt.Errorf("unexpected arguments %q", fs.Args())
+		}
+		rest = fs.Args()
 	}
 
 	cfg, err := load(*file)
@@ -110,7 +117,9 @@ func run(args []string) error {
 	case "down":
 		return c.Down(cfg, volumes)
 	case "shell":
-		return c.Shell(cfg, fs.Args())
+		return c.Shell(cfg, rest)
+	case "vscode":
+		return c.VSCode(cfg, rest)
 	case "status":
 		return c.Status(cfg)
 	case "logs":

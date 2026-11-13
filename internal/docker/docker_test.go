@@ -65,3 +65,18 @@ func TestBuildArgs(t *testing.T) {
 		t.Errorf("got  %s\nwant %s", got, want)
 	}
 }
+
+func TestCodeCommand(t *testing.T) {
+	for args, want := range map[string]string{
+		"":                                     "code tunnel --accept-server-license-terms",
+		"tunnel":                               "code tunnel --accept-server-license-terms",
+		"tunnel --accept-server-license-terms": "code tunnel --accept-server-license-terms",
+		"tunnel --name mybox":                  "code tunnel --name mybox --accept-server-license-terms",
+		"serve-web":                            "code serve-web",
+	} {
+		got := strings.Join(append([]string{"code"}, codeCommand(strings.Fields(args))...), " ")
+		if got != want {
+			t.Errorf("codeCommand(%q) = %q, want %q", args, got, want)
+		}
+	}
+}

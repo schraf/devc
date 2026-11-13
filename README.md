@@ -62,6 +62,7 @@ devc [-f file.yaml] <command> [flags]
 | `stop` | Stops the container. |
 | `down [--volumes]` | Removes the container. `--volumes` also removes its named volumes. |
 | `shell [-- cmd args]` | Opens the user's login shell in the running container. With `-- cmd args`, it runs that command instead. |
+| `vscode [args]` | Runs the container's VS Code CLI: `code tunnel` by default, otherwise `code <args>`. Needs the `vscode` feature. See [VS Code](#vs-code). |
 | `status` | Shows whether the image is up to date with the YAML, the container's state, and which volumes exist. |
 | `logs [-f]` | Shows the container's output. `-f` follows it. |
 
@@ -166,7 +167,8 @@ features:
 | `workmux` | workmux | `version` (0.1.279) |
 | `zoxide` | zoxide | |
 | `btop` | btop | |
-| `glab` | GitLab CLI, checksum-verified | `version` (1.128.0) |
+| `gh` | GitHub CLI, checksum-verified | `version` (2.104.0) |
+| `vscode` | VS Code CLI (`code`) for Remote Tunnel access | `version` (1.146.0) |
 | `terraform` | HashiCorp Terraform, checksum-verified | `version` (1.17.1) |
 | `go` | Go in `/usr/local/go`, `GOPATH=~/go` | `version` (1.27.3) |
 | `docker-in-docker` | Docker Engine, buildx and compose. dockerd starts with the container; the user is in the `docker` group | |
@@ -180,6 +182,33 @@ features:
 
 **vim plugins** are `owner/repo` on GitHub or a full git URL. An optional `@ref` pins a branch
 or tag. They are cloned at build time.
+
+## VS Code
+The `vscode` feature installs the standalone [VS Code CLI](https://code.visualstudio.com/download)
+(`code`), which can expose the container through a
+[Remote Tunnel](https://code.visualstudio.com/docs/remote/tunnels): you connect from vscode.dev
+in a browser or from any VS Code client, with no SSH and no open ports.
+
+```bash
+devc up
+devc vscode        # runs `code tunnel`; the first run prints a device code and a vscode.dev URL
+```
+
+Complete the device-code login with a GitHub account, then open the printed URL
+(`https://vscode.dev/tunnel/<machine>/<folder>`) on any device, or connect from desktop VS Code
+with **Remote Tunnels: Connect to Tunnel**. Whoever authenticated on the client must match the
+account that authorized the tunnel; nothing else can reach it.
+
+The tunnel runs only while `devc vscode` is attached: Ctrl-C ends it, and rerunning it
+reconnects without a new login. The CLI keeps its state in `~/.vscode` and the server it
+downloads in `~/.vscode-server`, so persist both to survive recreations:
+
+```yaml
+persist: [.vscode, .vscode-server]
+```
+
+Anything after `vscode` goes to the CLI (`devc vscode serve-web`, `devc vscode --name mybox`),
+and tunnels accept the server license terms automatically.
 
 ## How it works
 - **Build:** devc validates the definition, renders a Dockerfile from the enabled features'
