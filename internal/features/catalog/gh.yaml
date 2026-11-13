@@ -1,0 +1,17 @@
+description: GitHub CLI (checksum-verified)
+options:
+  version:
+    default: 2.104.0
+    help: Release version to install
+    pattern: '^[0-9A-Za-z][0-9A-Za-z.+_-]*$'
+system: |
+  # GitHub CLI (gh), checksum-verified against the release's checksums.txt
+  RUN set -eux; \
+      base=https://github.com/cli/cli/releases/download/v{{.Opt.version}}; \
+      file=gh_{{.Opt.version}}_linux_{{arch "arm64" "amd64"}}.tar.gz; \
+      cd /tmp; \
+      curl -fsSLO "$base/$file"; \
+      curl -fsSL "$base/gh_{{.Opt.version}}_checksums.txt" | grep " $file\$" | sha256sum -c -; \
+      tar -xzf "$file" -C /usr/local/bin --strip-components=1 bin/gh; \
+      rm -f "$file"; \
+      gh --version
